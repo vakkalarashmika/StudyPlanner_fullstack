@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Study Planner - To-Do</title>
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <!-- Bootstrap & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: url('https://plus.unsplash.com/premium_photo-1683309563514-aff14da6c40d?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') 
+        no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode {
+      background: #121212;
+      color: #f1f1f1;
+    }
+
+    .navbar {
+      background-color: #343a40;
+    }
+
+    .navbar-brand, .nav-link {
+      color: #fff !important;
+    }
+
+    .nav-link:hover {
+      color: #ff9800 !important;
+    }
+.main-container {
+  display: flex;
+  justify-content: flex-start; /* Changed from center to start */
+  margin-top: 20px;
+  padding: 20px 20px 20px 100px; /* Added left padding */
+}
+
+.container {
+  flex: 0 0 450px; /* Made width more precise */
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  margin-right: 300px; /* Pulls right container closer */
+}
+
+.tasks-panel {
+  flex: 0 0 550px; /* Made width more precise */
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  position: relative;
+  left: -80px; /* Final position adjustment */
+}
+
+@media (max-width: 1000px) {
+  .main-container {
+    flex-direction: column;
+    padding: 20px; /* Reset padding for mobile */
+  }
+  .container, .tasks-panel {
+    width: 100%;
+    margin-right: 0;
+    left: 0;
+  }
+}
+    body.dark-mode .container {
+      background-color: #1e1e1e;
+    }
+
+    .form-control, .btn {
+      border-radius: 0.5rem;
+    }
+
+    .btn-primary {
+      background-color: #ff9800;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #e68900;
+    }
+
+    ul.list-group li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .completed {
+      text-decoration: line-through;
+      color: gray;
+    }
+
+    .header-right a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    /* Dropdown button styling */
+    .dropdown-toggle::after {
+      display: none;
+    }
+
+    body.dark-mode .tasks-panel {
+      background: #1e1e1e;
+    }
+
+    .header {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #searchInput {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 1000px) {
+      .main-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .container, .tasks-panel {
+        width: 100%;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <h1 class="sitename">Smart Study Planner</h1>
+      </a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <div class="header-right">
+            <a href="index.html">Home</a>
+            <a href="generate.html">Generate Time Table</a>
+            <a href="dictionary.html">Dictionary</a>
+           
+          </div>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <div class="header text-center mt-4">
+    <h1>📝 To-Do List</h1>
+    <input type="text" id="searchInput" placeholder="Search task..." oninput="searchTasks()" class="form-control mt-2"/>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-container">
+    <!-- Input Container -->
+    <div class="container">
+      <!-- Inputs -->
+      <div class="inputs d-flex flex-column gap-2">
+        <select id="category" class="form-select">
+          <option value="health">Health</option>
+          <option value="study">Study</option>
+          <option value="personal">Personal</option>
+        </select>
+
+        <input type="text" id="taskInput" placeholder="Add new task..." class="form-control"/>
+        <input type="date" id="dueDate" class="form-control"/>
+
+        <select id="priority" class="form-select">
+          <option value="low">Low Priority</option>
+          <option value="medium">Medium Priority</option>
+          <option value="high">High Priority</option>
+        </select>
+
+        <button class="add-task btn btn-primary" onclick="addTask(this)">Add Task</button>
+      </div>
+    </div>
+
+    <!-- Tasks Panel -->
+    <div class="tasks-panel">
+      <h3>📋 Tasks</h3>
+      <table id="taskTable" class="table table-striped table-hover mt-3">
+        <thead>
+          <tr>
+            <th>Done</th>
+            <th>Task</th>
+            <th>Due Date</th>
+            <th>Priority</th>
+            <th>Category</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="taskBody"></tbody>
+      </table>
+
+      <!-- Dropdown Menu for Filters & Controls -->
+      <div class="dropdown mt-3">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="optionsMenu" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-three-dots"></i>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="optionsMenu">
+          <li><a class="dropdown-item" href="#" onclick="filterTasks('all')">Show All Tasks</a></li>
+          <li><a class="dropdown-item" href="#" onclick="filterTasks('completed')">Completed Tasks</a></li>
+          <li><a class="dropdown-item" href="#" onclick="filterTasks('incomplete')">Incomplete Tasks</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" href="#" onclick="clearAll()">Clear All Tasks</a></li>
+          <li><a class="dropdown-item text-danger" href="#" onclick="clearCompleted()">Clear Completed Tasks</a></li>
+        </ul>
+      </div>
+
+      <!-- Counter -->
+      <div class="counter mt-3" id="counter">0 of 0 tasks completed</div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const taskInput = document.getElementById("taskInput");
+    const dueDate = document.getElementById("dueDate");
+    const priority = document.getElementById("priority");
+    const taskBody = document.getElementById("taskBody");
+    const counter = document.getElementById("counter");
+    const category = document.getElementById("category");
+    const searchInput = document.getElementById("searchInput");
+    const themeToggle = document.getElementById("themeToggle");
+
+    if (localStorage.getItem("theme") === "dark") {
+      document.body.classList.add("dark-mode");
+      themeToggle.textContent = "☀️";
+    }
+
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark-mode");
+      if (document.body.classList.contains("dark-mode")) {
+        localStorage.setItem("theme", "dark");
+        themeToggle.textContent = "☀️";
+      } else {
+        localStorage.setItem("theme", "light");
+        themeToggle.textContent = "🌙";
+      }
+    });
+
+    function updateCounter() {
+      const total = taskBody.children.length;
+      const completed = document.querySelectorAll("#taskBody tr.completed").length;
+      counter.textContent = `${completed} of ${total} tasks completed`;
+    }
+
+    function addTask(button) {
+      if (taskInput.value.trim() === "") return alert("Enter a task");
+
+      const tr = document.createElement("tr");
+
+      const checkboxTd = document.createElement("td");
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.onchange = () => {
+        tr.classList.toggle("completed");
+        updateCounter();
+      };
+      checkboxTd.appendChild(checkbox);
+
+      const taskTd = document.createElement("td");
+      taskTd.innerHTML = `<strong class="priority-${priority.value}">${taskInput.value}</strong>`;
+
+      const dueTd = document.createElement("td");
+      dueTd.textContent = dueDate.value || "N/A";
+
+      const priorityTd = document.createElement("td");
+      priorityTd.textContent = priority.value;
+
+      const categoryTd = document.createElement("td");
+      categoryTd.textContent = category.value;
+
+      const actionsTd = document.createElement("td");
+      const editBtn = document.createElement("button");
+      editBtn.textContent = "Edit";
+      editBtn.className = "btn btn-sm btn-warning me-1";
+      editBtn.onclick = () => {
+        taskInput.value = taskTd.textContent;
+        taskBody.removeChild(tr);
+        updateCounter();
+      };
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "Delete";
+      deleteBtn.className = "btn btn-sm btn-danger";
+      deleteBtn.onclick = () => {
+        taskBody.removeChild(tr);
+        updateCounter();
+      };
+      actionsTd.append(editBtn, deleteBtn);
+
+      tr.setAttribute("data-task", taskInput.value.toLowerCase());
+      tr.append(checkboxTd, taskTd, dueTd, priorityTd, categoryTd, actionsTd);
+      taskBody.appendChild(tr);
+
+      taskInput.value = "";
+      dueDate.value = "";
+      priority.value = "low";
+      category.value = "health";
+
+      updateCounter();
+    }
+
+    function clearAll() {
+      taskBody.innerHTML = "";
+      updateCounter();
+    }
+
+    function clearCompleted() {
+      document.querySelectorAll("#taskBody tr.completed").forEach(task => task.remove());
+      updateCounter();
+    }
+
+    function searchTasks() {
+      const term = searchInput.value.toLowerCase();
+      const tasks = taskBody.querySelectorAll("tr");
+      tasks.forEach(task => {
+        const text = task.getAttribute("data-task") || "";
+        task.style.display = text.includes(term) ? "" : "none";
+      });
+    }
+
+    function filterTasks(filterType) {
+      const tasks = taskBody.querySelectorAll("tr");
+      
+      tasks.forEach(task => {
+        switch(filterType) {
+          case 'all':
+            task.style.display = "";
+            break;
+          case 'completed':
+            task.style.display = task.classList.contains("completed") ? "" : "none";
+            break;
+          case 'incomplete':
+            task.style.display = !task.classList.contains("completed") ? "" : "none";
+            break;
+        }
+      });
+      
+      updateCounter();
+    }
+  </script>
+
+</body>
+</html>

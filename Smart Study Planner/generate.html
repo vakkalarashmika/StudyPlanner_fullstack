@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Study Planner</title>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body {
+      background: url('https://images.unsplash.com/photo-1462219157779-8a35f2687626?q=80&w=1074&auto=format&fit=crop') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+    }
+    .navbar { background-color: #343a40; }
+    .navbar-brand, .nav-link { color: #fff !important; }
+    .nav-link:hover { color: #ff9800 !important; }
+    .container {
+      margin-top: 60px;
+      background-color: #fff;
+      padding: 30px;
+      width: 60%;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    .form-label { font-weight: 600; }
+    .btn-primary { background-color: #ff9800; border: none; }
+    .btn-primary:hover { background-color: #e68900; }
+   
+    .header-right a { color: white; text-decoration: none; margin-left: 20px; }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#"><h1 class="sitename">Smart Study Planner</h1></a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <div class="header-right">
+            <a href="index.html">Home</a>
+            <a href="todo.html">To Do List</a>
+            <a href="dictionary.html">Dictionary</a>
+            <a href="history.html">History</a>
+          </div>
+        </ul>
+       
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- Main Container -->
+  <div class="container">
+    <h2 class="text-center mb-4">📚 Generate Your Timetable</h2>
+    <form id="studyForm" class="row g-3">
+      <div class="col-md-10">
+        <label for="studyDate" class="form-label">Select Date</label>
+        <input type="date" id="studyDate" class="form-control" required />
+      </div>
+      <div class="col-md-10">
+        <label for="subjects" class="form-label">Enter Subjects (comma separated)</label>
+        <input type="text" id="subjects" class="form-control" placeholder="e.g., Math, Physics, Chemistry" required />
+      </div>
+      <div class="col-md-10">
+        <label for="priority" class="form-label">Enter Priorities (same order, comma separated)</label>
+        <input type="text" id="priority" class="form-control" placeholder="e.g., 3,2,1" required />
+      </div>
+      <div class="col-md-4">
+        <label for="startTime" class="form-label">Start Time (HH:MM)</label>
+        <input type="time" id="startTime" class="form-control" required />
+      </div>
+      <div class="col-md-4">
+        <label for="endTime" class="form-label">End Time (HH:MM)</label>
+        <input type="time" id="endTime" class="form-control" required />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label d-block">Include Breaks?</label>
+        <input type="checkbox" id="includeBreaks" />
+      </div>
+      <div class="col-12 text-center">
+        <button type="submit" class="btn btn-primary">Generate Timetable</button>
+      </div>
+    </form>
+
+    <div id="output" class="timetable mt-5"></div>
+  </div>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <!-- Firebase Authentication -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
+  <!-- Your Firebase Configuration -->
+  <script>
+    const firebaseConfig = {
+  apiKey: "AIzaSyDHcZ60fhq6-XHCx_MkOoB7kYT9R0YyT1s",
+  authDomain: "smart-study-planner-222e5.firebaseapp.com",
+  projectId: "smart-study-planner-222e5",
+  storageBucket: "smart-study-planner-222e5.firebasestorage.app",
+  messagingSenderId: "263947404848",
+  appId: "1:263947404848:web:96d68d5a243873c2708ff5",
+  measurementId: "G-6B0VL5N1HR"
+};
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <!-- JS Scripts -->
+  <script>
+    document.getElementById('studyForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const studyDate = document.getElementById('studyDate').value;
+      const subjects = document.getElementById('subjects').value.split(',').map(s => s.trim());
+      const priorities = document.getElementById('priority').value.split(',').map(Number);
+      const startTime = document.getElementById('startTime').value;
+      const endTime = document.getElementById('endTime').value;
+      const includeBreaks = document.getElementById('includeBreaks').checked;
+
+      if (subjects.length !== priorities.length) {
+        alert('Subjects and priorities count must match!');
+        return;
+      }
+
+      const totalPriority = priorities.reduce((a, b) => a + b, 0);
+      const [startHour, startMin] = startTime.split(':').map(Number);
+      const [endHour, endMin] = endTime.split(':').map(Number);
+
+      let totalMinutes = (endHour * 60 + endMin) - (startHour * 60 + startMin);
+      if (totalMinutes <= 0) {
+        alert('End time must be after start time.');
+        return;
+      }
+
+      const breakDuration = 15;
+      const breakCount = includeBreaks ? subjects.length - 1 : 0;
+
+      if (includeBreaks && totalMinutes > breakCount * breakDuration) {
+        totalMinutes -= breakCount * breakDuration;
+      } else if (includeBreaks && totalMinutes <= breakCount * breakDuration) {
+        alert("Not enough time for breaks between sessions.");
+        return;
+      }
+
+      let slots = [];
+      let currentTime = startHour * 60 + startMin;
+
+      const subjectTime = subjects.map((subj, i) => ({
+        name: subj,
+        minutes: Math.floor((priorities[i] / totalPriority) * totalMinutes)
+      }));
+
+      subjectTime.forEach((entry, index) => {
+        let start = currentTime;
+        let end = start + entry.minutes;
+        slots.push({ subject: entry.name, start: formatTime(start), end: formatTime(end) });
+        currentTime = end;
+
+        if (includeBreaks && index < subjectTime.length - 1) {
+          let breakStart = currentTime;
+          let breakEnd = breakStart + breakDuration;
+          slots.push({ subject: 'Break', start: formatTime(breakStart), end: formatTime(breakEnd) });
+          currentTime = breakEnd;
+        }
+      });
+
+      let table =` <h4 class="text-center mt-4">🕒 Your Timetable (${studyDate})</h4>`;
+      table += `<table class="table table-bordered table-striped mt-3"><thead><tr><th>Subject</th><th>Start</th><th>End</th></tr></thead><tbody>`;
+      slots.forEach(slot => {
+        table +=`<tr><td>${slot.subject}</td><td>${slot.start}</td><td>${slot.end}</td></tr>`;
+      });
+      table +=`</tbody></table>`;
+
+      document.getElementById('output').innerHTML = table;
+
+      // Save to localStorage
+      const historyItem = {
+        date: studyDate,
+        createdAt: new Date().toLocaleString(),
+        timetable: slots
+      };
+
+      let history = JSON.parse(localStorage.getItem("timetableHistory")) || [];
+      history.push(historyItem);
+      localStorage.setItem("timetableHistory", JSON.stringify(history));
+    });
+
+    function formatTime(minutes) {
+      const h = Math.floor(minutes / 60);
+      const m = minutes % 60;
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const displayHour = ((h + 11) % 12) + 1;
+      return ` ${String(displayHour).padStart(2, '0')}:${String(m).padStart(2, '0')} ${ampm}`;
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

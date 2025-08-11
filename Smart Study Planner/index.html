@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Index - Smart Study Planner</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="assets/img/smartstudyplanner-logo.png" rel="icon">
+  <link href="assets/img/smartstudyplanner-logo.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&family=Raleway:wght@100;400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <style>
+    /* Default light theme for study-tips */
+    #study-tips {
+      background-color: #f8f9fa;
+      color: #212529;
+    }
+
+    /* Cards (light theme) */
+    #study-tips .card {
+      background-color: #ffffff;
+      color: #212529;
+      border: 1px solid #dee2e6;
+    }
+    
+    /* Loading spinner */
+    .btn-loading .spinner-border {
+      vertical-align: text-top;
+      margin-right: 5px;
+    }
+  </style>
+</head>
+
+<body class="index-page">
+
+  <!-- Header -->
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+      <a href="index.html" class="logo d-flex align-items-center me-auto">
+        <h1 class="sitename">Smart Study Planner</h1>
+      </a>
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="#hero" class="active">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#study-tips">Study Tips</a></li>
+          <li><a href="#" onclick="handleFeatureClick(event)">Features</a></li>
+          <li><a href="#" onclick="handleHistoryClick(event)">History</a></li>
+          <li id="loginNavItem"><a href="login.html">Log in</a></li> 
+          <li id="logoutNavItem" style="display:none;"><a href="#" onclick="logoutUser()">Log out</a></li>
+          <li><a href="sign-up.html">Sign-Up</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero section dark-background">
+      <img src="assets/img/hero-bg.jpg" alt="" data-aos="fade-in">
+      <div class="container d-flex flex-column align-items-center">
+        <h2 data-aos="fade-up" data-aos-delay="100">Smart Study Planner</h2>
+        <p data-aos="fade-up" data-aos-delay="200">Plan smart, study easy — let your schedule guide your success!</p>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about section">
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+            <h3>Empowering Smarter Learning with Smart Study Planner</h3>
+            <img src="assets/img/about.jpg" class="img-fluid rounded-4 mb-4" alt="">
+            <p>Smart Study Planner is a personalized time management tool designed to help students and individuals plan their study or work schedules effectively. With features like subject allocation, time slot customization, and auto-assigned breaks, it ensures a balanced and productive routine.</p>
+            <p>Whether you're preparing for exams or managing daily tasks, Smart Study Planner adapts to your lifestyle. It offers an intuitive interface and a user-friendly approach to scheduling so that you can focus more on learning and less on planning.</p>
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="250">
+            <div class="content ps-0 ps-lg-5">
+              <p class="fst-italic">"A well-planned schedule is the first step toward success."</p>
+              <ul>
+                <li><i class="bi bi-check-circle-fill"></i> Easy subject and task entry with customized time slots.</li>
+                <li><i class="bi bi-check-circle-fill"></i> Auto-included breaks for lunch, dinner, and short rests.</li>
+                <li><i class="bi bi-check-circle-fill"></i> Stores schedules securely using Firebase for personalized access anytime, anywhere.</li>
+              </ul>
+              <p>Smart Study Planner is ideal for students, professionals, and lifelong learners who want to stay organized and focused.</p>
+              <div class="position-relative mt-4">
+                <img src="assets/img/about-2.jpg" class="img-fluid rounded-4" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="study-tips" class="study-tips section py-5 bg-light">
+      <div class="container">
+        <div class="section-header text-center mb-5">
+          <h2 class="fw-bold">Top Study Tips for Maximum Productivity</h2>
+          <p class="text-muted">Boost your focus, beat procrastination, and study smarter with these proven techniques.</p>
+        </div>
+
+        <div class="row g-4">
+          <!-- Tip Cards -->
+          <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+              <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                  <i class="bi bi-clock-history display-6 text-primary me-3"></i>
+                  <h5 class="card-title mb-0">Pomodoro Technique</h5>
+                </div>
+                <p class="card-text">Work in 25-minute sessions with 5-minute breaks. Boosts concentration and prevents burnout.</p>
+              </div>
+            </div>
+          </div>
+          <!-- Tip 2 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <i class="bi bi-bullseye display-6 text-success me-3"></i>
+              <h5 class="card-title mb-0">Set SMART Goals</h5>
+            </div><p class="card-text">Make your goals Specific, Measurable, Achievable, Relevant, and Time-bound for clarity and direction.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Tip 3 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <i class="bi bi-journal-check display-6 text-danger me-3"></i>
+              <h5 class="card-title mb-0">Active Recall</h5>
+            </div>
+            <p class="card-text">Instead of rereading, test yourself on the material. It strengthens memory and understanding.</p>
+          </div></div>
+      </div>  <!-- Tip 4 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <i class="bi bi-calendar-event display-6 text-warning me-3"></i>
+              <h5 class="card-title mb-0">Make a Daily Schedule</h5>
+            </div>
+            <p class="card-text">Plan your day with fixed study slots and break times. Consistency is key to long-term success.</p>
+          </div>
+        </div>
+         </div><!-- Tip 5 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <i class="bi bi-headphones display-6 text-info me-3"></i>
+              <h5 class="card-title mb-0">Eliminate Distractions</h5>
+            </div>
+            <p class="card-text">Keep your phone away, use website blockers, and find a quiet environment to maintain focus.</p>
+          </div>
+        </div>
+          </div>   <!-- Tip 6 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <i class="bi bi-water display-6 text-primary me-3"></i>
+              <h5 class="card-title mb-0">Stay Hydrated & Take Breaks</h5>
+            </div>
+            <p class="card-text">Your brain works best when it’s rested and hydrated. Don’t skip water or mental breaks!</p>
+          </div>
+        </div>
+      </div>
+
+          <!-- More tip cards... -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+  </a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+
+  <!-- Firebase Integration -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script>
+    // Initialize Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDHcZ60fhq6-XHCx_MkOoB7kYT9R0YyT1s",
+      authDomain: "smart-study-planner-222e5.firebaseapp.com",
+      projectId: "smart-study-planner-222e5",
+      storageBucket: "smart-study-planner-222e5.appspot.com",
+      messagingSenderId: "263947404848",
+      appId: "1:263947404848:web:96d68d5a243873c2708ff5",
+      measurementId: "G-6B0VL5N1HR"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+
+    // Set auth persistence and track state
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .then(() => {
+        // Track auth state changes
+        firebase.auth().onAuthStateChanged((user) => {
+          updateNavbar(user);
+        });
+      })
+      .catch((error) => {
+        console.error("Auth persistence error:", error);
+      });
+
+    // Update navigation based on auth state
+    function updateNavbar(user) {
+      const loginItem = document.getElementById('loginNavItem');
+      const logoutItem = document.getElementById('logoutNavItem');
+      
+      if (user) {
+        loginItem.style.display = 'none';
+        logoutItem.style.display = 'block';
+      } else {
+        loginItem.style.display = 'block';
+        logoutItem.style.display = 'none';
+      }
+    }
+
+    // Check auth state reliably
+    function checkAuth() {
+      return new Promise((resolve) => {
+        const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+          unsubscribe();
+          resolve(user);
+        });
+      });
+    }
+
+    // Handle feature click with loading state
+    async function handleFeatureClick(event) {
+      const button = event.target.closest('a');
+      try {
+        // Show loading state
+        button.classList.add('btn-loading');
+        button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
+        
+        const user = await checkAuth();
+        if (user) {
+          window.location.href = "features.html";
+        } else {
+          alert("Please log in to access Features.");
+          window.location.href = "login.html";
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
+      } finally {
+        button.classList.remove('btn-loading');
+        button.innerHTML = 'Features';
+      }
+    }
+
+    // Handle history click with loading state
+    async function handleHistoryClick(event) {
+      const button = event.target.closest('a');
+      try {
+        // Show loading state
+        button.classList.add('btn-loading');
+        button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
+        
+        const user = await checkAuth();
+        if (user) {
+          window.location.href = "history.html";
+        } else {
+          alert("Please log in to access History.");
+          window.location.href = "login.html";
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
+      } finally {
+        button.classList.remove('btn-loading');
+        button.innerHTML = 'History';
+      }
+    }
+
+    // Logout function
+    function logoutUser() {
+      firebase.auth().signOut().then(() => {
+        window.location.href = "index.html";
+      }).catch((error) => {
+        console.error("Logout error:", error);
+        alert("Error signing out. Please try again.");
+      });
+    }
+
+    // Initialize navbar on load
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAuth().then(updateNavbar);
+    });
+  </script>
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
